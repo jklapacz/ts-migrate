@@ -40,12 +40,21 @@ yargs
     },
   )
   .command(
-    'init:extended <folder>',
-    'Initialize tsconfig.json file in <folder>',
-    (cmd) => cmd.positional('folder', { type: 'string' }).require(['folder']),
+    'init:extended <folder> [root]',
+    'Initialize tsconfig.json file in <folder> extending optionally from <root>',
+    (cmd) =>
+      cmd
+        .positional('folder', { type: 'string' })
+        .positional('root', { type: 'string' })
+        .require(['folder']),
     (args) => {
       const rootDir = path.resolve(process.cwd(), args.folder);
-      init({ rootDir, isExtendedConfig: true });
+      let projectRoot;
+      if (args.root) {
+        projectRoot = path.resolve(process.cwd(), args.root);
+      }
+
+      init({ rootDir, isExtendedConfig: true, projectRoot });
     },
   )
   .command(
